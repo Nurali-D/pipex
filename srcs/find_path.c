@@ -31,6 +31,17 @@ char	**get_path_value(char **env)
 	return (path_value);
 }
 
+char	*check_local_path(char *path, char *command)
+{
+	path = ft_strjoin("./", command);
+	if (access(path, F_OK))
+	{
+		free(path);
+		path = ft_strdup(command);
+	}
+	return (path);
+}
+
 char	*get_path(char **pv, char *command)
 {
 	int		i;
@@ -50,14 +61,7 @@ char	*get_path(char **pv, char *command)
 		path = NULL;
 	}
 	if (path == NULL)
-	{
-		path = ft_strjoin("./", command);
-		if (access(path, F_OK))
-		{
-			free(path);
-			path = ft_strdup(command);
-		}
-	}
+		path = check_local_path(path, command);
 	return (path);
 }
 

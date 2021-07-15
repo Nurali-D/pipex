@@ -6,9 +6,7 @@ void	free_p(t_pipex *p)
 	t_token	*tmp2;
 	int		i;
 
-	tmp = NULL;
-	if (p && p->tokens)
-		tmp = p->tokens;
+	tmp = p->tokens;
 	while (tmp)
 	{
 		if (tmp->args)
@@ -27,8 +25,7 @@ void	free_p(t_pipex *p)
 		tmp = tmp->next;
 		free(tmp2);
 	}
-	if (p)
-		free(p);
+	free(p);
 }
 
 void	free_fd_pid_p(int **fd, int *pid, t_pipex *p)

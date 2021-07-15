@@ -39,8 +39,6 @@ int	heredoc_fd(t_pipex *p)
 		free(line);
 	}
 	close(fd);
-	fd = open("flag", O_RDWR | O_CREAT, 0644);
-	close(fd);
 	return (open("temp-file", O_RDONLY));
 }
 
@@ -48,13 +46,11 @@ int	file_append(t_pipex *p)
 {
 	int	fd;
 
-	if (open(p->file2, __O_DIRECTORY) != -1)
+	if (open(p->file2, O_DIRECTORY) != -1)
 	{
-		fd = open("temp-file2", O_RDWR | O_CREAT, 0644);
-		write(fd, "bash: ", 6);
-		write(fd, p->file2, ft_strlen(p->file2));
-		write(fd, ": Is a directory\n", 17);
-		close(fd);
+		write(STDOUT_FILENO, "bash: ", 6);
+		write(STDOUT_FILENO, p->file2, ft_strlen(p->file2));
+		write(STDOUT_FILENO, ": Is a directory\n", 17);
 		return (-1);
 	}
 	if (access(p->file2, F_OK) == -1)
@@ -64,11 +60,9 @@ int	file_append(t_pipex *p)
 	}
 	if (access(p->file2, W_OK) == -1)
 	{
-		fd = open("temp-file2", O_RDWR | O_CREAT, 0644);
-		write(fd, "bash: ", 6);
-		write(fd, p->file2, ft_strlen(p->file2));
-		write(fd, ": Permission denied\n", 20);
-		close(fd);
+		write(STDOUT_FILENO, "bash: ", 6);
+		write(STDOUT_FILENO, p->file2, ft_strlen(p->file2));
+		write(STDOUT_FILENO, ": Permission denied\n", 20);
 		return (-1);
 	}
 	fd = open(p->file2, O_APPEND | O_RDWR);

@@ -29,6 +29,8 @@ typedef struct s_pipex
 	char	*limiter;
 	int		i;
 	int		nc;
+	int		f1;
+	int		f2;
 }				t_pipex;
 
 int		execute_pipes(t_pipex *p);

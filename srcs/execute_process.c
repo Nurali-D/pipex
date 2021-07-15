@@ -2,8 +2,6 @@
 
 int	check_pathfile(t_token *token, t_pipex *p, int f)
 {
-	int		fd_temp;
-
 	if (f == 1 && !(p->limiter) && access(p->file1, R_OK))
 		return (-1);
 	if (f == 2 && !access(p->file2, F_OK) && access(p->file2, W_OK))
@@ -11,22 +9,8 @@ int	check_pathfile(t_token *token, t_pipex *p, int f)
 	if (!((token->path[0] == '.' && token->path[1] == '/')
 			|| token->path[0] == '/'))
 	{
-		if (access("temp-file3", F_OK))
-		{
-			fd_temp = open("temp-file3", O_RDWR | O_CREAT, 0644);
-		}
-		else
-		{
-			fd_temp = open("temp-file3", O_WRONLY | O_APPEND);
-		}
-		write(fd_temp, token->path, ft_strlen(token->path));
-		write(fd_temp, ": command not found\n", 20);
-		close(fd_temp);
-		if (!p->limiter)
-		{
-			fd_temp = open("flag", O_RDWR | O_CREAT, 0644);
-			close(fd_temp);
-		}
+		write(STDOUT_FILENO, token->path, ft_strlen(token->path));
+		write(STDOUT_FILENO, ": command not found\n", 20);
 		return (-1);
 	}
 	return (0);
@@ -34,27 +18,21 @@ int	check_pathfile(t_token *token, t_pipex *p, int f)
 
 int	first_command(t_pipex *p, int **fd, t_token *token)
 {
-	int	f1;
-
-	f1 = check_open_file(p, 1);
-	if (check_pathfile(token, p, 1) == -1 || f1 == -1)
+	if (check_pathfile(token, p, 1) == -1 || p->f1 == -1)
 		return (-1);
-	dup2(f1, STDIN_FILENO);
+	dup2(p->f1, STDIN_FILENO);
 	dup2((fd[1][1]), STDOUT_FILENO);
-	close(f1);
+	close(p->f1);
 	return (0);
 }
 
 int	last_command(t_pipex *p, int **fd, t_token *token)
 {
-	int	f2;
-
-	f2 = check_open_file(p, 2);
-	if (check_pathfile(token, p, 2) == -1 || f2 == -1)
+	if (p->f2 == -1 || check_pathfile(token, p, 2) == -1)
 		return (-1);
-	dup2(f2, STDOUT_FILENO);
+	dup2(p->f2, STDOUT_FILENO);
 	dup2(fd[p->i][0], STDIN_FILENO);
-	close(f2);
+	close(p->f2);
 	return (0);
 }
 

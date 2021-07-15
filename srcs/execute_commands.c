@@ -76,32 +76,14 @@ int	execute_pipes(t_pipex *p)
 {
 	int		**fd;
 	int		*pid;
-	int		temp_fd;
-	char	buf[1];
 
 	fd = NULL;
 	pid = NULL;
 	fd = malloc_fd_pid(fd, &pid, p);
 	make_pipes(p, fd, pid);
-	if (execute_commands(p, fd, pid) == 0 && 
-			(open(p->file2, __O_DIRECTORY) != -1 || access(p->file2, W_OK) == -1))
-	{
-		temp_fd = open("temp-file2", O_RDONLY);
-		while (read(temp_fd, buf, 1) > 0)
-			write(STDERR_FILENO, buf, 1);
-		close(temp_fd);
-		unlink("temp-file2");
-	}
-
-	if (!access("flag", F_OK) && !access("temp-file3", F_OK))
-	{
-		temp_fd = open("temp-file3", O_RDONLY);
-		while (read(temp_fd, buf, 1) > 0)
-			write(STDERR_FILENO, buf, 1);
-		close(temp_fd);
-		unlink("temp-file3");
-		unlink("flag");
-	}
+	p->f1 = check_open_file(p, 1);
+	p->f2 = check_open_file(p, 2);
+	execute_commands(p, fd, pid);
 	free_fd_pid_p(fd, pid, p);
 	unlink("temp-file");
 	return (0);
