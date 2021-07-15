@@ -9,12 +9,12 @@ BONUS_DIR = srcs_bonus/
 LIB = lib/
 
 SRCSFILES = execute_process.c main.c execute_commands.c free_vars.c check_open_files.c \
-			first_last_files.c find_path.c \
+			first_last_files.c find_path.c get_pwd.c \
 
 
 BONUS_FILES = execute_process_bonus.c main_bonus.c execute_commands_bonus.c \
 			free_vars_bonus.c check_open_files_bonus.c \
-			first_last_files_bonus.c find_path_bonus.c \
+			first_last_files_bonus.c find_path_bonus.c get_pwd_bonus.c \
 
 SRCS = $(addprefix $(SRCSDIR), $(SRCSFILES))
 
@@ -58,6 +58,6 @@ bonus: $(B_OBJS) $(HEAD)*.h
 	${CC} ${CFLAGS} $(B_OBJS) $(FLAGS)  -o ${NAME}
 
 norme:
-	norminette -R CheckForbiddenSourceHeader $(SRCSDIR)*.c $(BONUS_DIR)*.c $(HEAD)*.h
+	norminette -R CheckForbiddenSourceHeader $(LIB)libft/* $(SRCSDIR)*.c $(BONUS_DIR)*.c $(HEAD)*.h
 
 .PHONY: all clean fclean re norme bonus

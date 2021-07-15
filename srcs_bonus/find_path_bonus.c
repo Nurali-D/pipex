@@ -1,17 +1,5 @@
 #include "pipex.h"
 
-void	free_array(char **array)
-{
-	int		i;
-	char	**tmp;
-
-	i = -1;
-	tmp = array;
-	while (tmp[++i])
-		free(tmp[i]);
-	free(array);
-}
-
 char	**get_path_value(char **env)
 {
 	char	**path_value;
@@ -31,9 +19,13 @@ char	**get_path_value(char **env)
 	return (path_value);
 }
 
-char	*check_local_path(char *path, char *command)
+char	*check_local_path(char *path, char *command, char *pwd)
 {
-	path = ft_strjoin("./", command);
+	char	*tmp;
+
+	tmp = ft_strjoin(pwd, "/");
+	path = ft_strjoin(tmp, command);
+	free(tmp);
 	if (access(path, F_OK))
 	{
 		free(path);
@@ -42,7 +34,7 @@ char	*check_local_path(char *path, char *command)
 	return (path);
 }
 
-char	*get_path(char **pv, char *command)
+char	*get_path(char **pv, char *command, char *pwd)
 {
 	int		i;
 	char	*tmp;
@@ -61,7 +53,7 @@ char	*get_path(char **pv, char *command)
 		path = NULL;
 	}
 	if (path == NULL)
-		path = check_local_path(path, command);
+		path = check_local_path(path, command, pwd);
 	return (path);
 }
 
@@ -69,9 +61,12 @@ char	*find_path(char *command, char **env)
 {
 	char	*path;
 	char	**path_value;
+	char	*pwd;
 
 	path_value = get_path_value(env);
-	path = get_path(path_value, command);
+	pwd = get_pwd(env);
+	path = get_path(path_value, command, pwd);
+	free(pwd);
 	free_array(path_value);
 	return (path);
 }

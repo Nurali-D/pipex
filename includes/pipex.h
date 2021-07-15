@@ -43,5 +43,7 @@ int		last_command_file(t_pipex *p);
 int		first_command_file(t_pipex *p);
 char	*find_path(char *command, char **env);
 int		close_fd(int **fd, int n);
+char	*get_pwd(char **env);
+void	free_array(char **array);
 
 #endif
