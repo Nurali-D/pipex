@@ -1,4 +1,4 @@
-# pipex
+# pipex with bonus part
 Objectives
 Your objective is to code the Pipex program.
 It should be executed in this way:
